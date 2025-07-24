@@ -284,30 +284,48 @@ async def upload_resume(
     file: UploadFile = File(...),
     user_id: str = Depends(get_current_user)
 ):
-    if not file.filename.endswith('.pdf'):
-        raise HTTPException(status_code=400, detail="Only PDF files are allowed")
-    
-    # Extract text from PDF
-    content = await file.read()
-    pdf_file = io.BytesIO(content)
-    resume_text = extract_text_from_pdf(pdf_file)
-    
-    # Save resume to database
-    resume_doc = {
-        "id": str(uuid.uuid4()),
-        "user_id": user_id,
-        "filename": file.filename,
-        "text_content": resume_text,
-        "uploaded_at": datetime.utcnow()
-    }
-    
-    await db.resumes.insert_one(resume_doc)
-    
-    return {
-        "message": "Resume uploaded successfully",
-        "resume_id": resume_doc["id"],
-        "text_preview": resume_text[:200] + "..." if len(resume_text) > 200 else resume_text
-    }
+    try:
+        # Check file type
+        if not file.filename.lower().endswith('.pdf'):
+            raise HTTPException(status_code=400, detail="Only PDF files are allowed")
+        
+        # Read file content
+        content = await file.read()
+        if len(content) == 0:
+            raise HTTPException(status_code=400, detail="Empty file uploaded")
+        
+        # Create BytesIO object for PDF processing
+        pdf_file = io.BytesIO(content)
+        
+        # Extract text from PDF
+        resume_text = extract_text_from_pdf(pdf_file)
+        
+        # Save resume to database
+        resume_doc = {
+            "id": str(uuid.uuid4()),
+            "user_id": user_id,
+            "filename": file.filename,
+            "text_content": resume_text,
+            "uploaded_at": datetime.utcnow()
+        }
+        
+        # Remove any existing resume for this user first
+        await db.resumes.delete_many({"user_id": user_id})
+        
+        # Insert new resume
+        await db.resumes.insert_one(resume_doc)
+        
+        return {
+            "message": "Resume uploaded successfully",
+            "resume_id": resume_doc["id"],
+            "text_preview": resume_text[:200] + "..." if len(resume_text) > 200 else resume_text
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Resume upload error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to process resume: {str(e)}")
 
 @app.post("/api/start-interview")
 async def start_interview(

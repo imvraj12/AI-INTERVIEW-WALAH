@@ -341,7 +341,14 @@ function App() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Resume Upload */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Upload Resume</h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-gray-900">Upload Resume</h2>
+                {resumeUploaded && (
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    ✓ Resume Uploaded
+                  </span>
+                )}
+              </div>
               <p className="text-gray-600 mb-4">
                 Upload your resume to get personalized interview questions based on your skills and experience.
               </p>

@@ -157,26 +157,84 @@ class AIInterviewAPITester:
 
     def create_test_pdf(self):
         """Create a simple test PDF content"""
-        # Create a simple text file that we'll treat as PDF for testing
-        pdf_content = b"""Test Resume Content
-        
-Name: John Doe
-Experience: 5 years in Software Development
-Skills: Python, JavaScript, React, FastAPI, MongoDB
-Education: Computer Science Degree
+        try:
+            from reportlab.pdfgen import canvas
+            from reportlab.lib.pagesizes import letter
+            import io
+            
+            buffer = io.BytesIO()
+            p = canvas.Canvas(buffer, pagesize=letter)
+            
+            # Add content to PDF
+            p.drawString(100, 750, "Test Resume")
+            p.drawString(100, 720, "Name: John Doe")
+            p.drawString(100, 690, "Experience: 5 years in Software Development")
+            p.drawString(100, 660, "Skills: Python, JavaScript, React, FastAPI, MongoDB")
+            p.drawString(100, 630, "Education: Computer Science Degree")
+            p.drawString(100, 600, "Projects:")
+            p.drawString(120, 570, "- E-commerce Platform using React and Node.js")
+            p.drawString(120, 540, "- Data Analytics Dashboard with Python and MongoDB")
+            p.drawString(120, 510, "- RESTful API development with FastAPI")
+            
+            p.save()
+            buffer.seek(0)
+            return buffer.getvalue()
+        except ImportError:
+            # Fallback: create a minimal PDF structure
+            pdf_content = b"""%PDF-1.4
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
 
-Projects:
-- E-commerce Platform using React and Node.js
-- Data Analytics Dashboard with Python and MongoDB
-- RESTful API development with FastAPI
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
+>>
+endobj
 
-Technical Skills:
-- Programming Languages: Python, JavaScript, TypeScript
-- Frameworks: React, FastAPI, Express.js
-- Databases: MongoDB, PostgreSQL
-- Tools: Git, Docker, AWS
-"""
-        return pdf_content
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Contents 4 0 R
+>>
+endobj
+
+4 0 obj
+<<
+/Length 44
+>>
+stream
+BT
+/F1 12 Tf
+100 700 Td
+(Test Resume Content) Tj
+ET
+endstream
+endobj
+
+xref
+0 5
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000206 00000 n 
+trailer
+<<
+/Size 5
+/Root 1 0 R
+>>
+startxref
+300
+%%EOF"""
+            return pdf_content
 
     def test_resume_upload(self):
         """Test resume upload functionality"""

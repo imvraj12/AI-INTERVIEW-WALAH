@@ -54,7 +54,8 @@ function App() {
       localStorage.setItem('token', response.data.access_token);
       setCurrentView('dashboard');
     } catch (error) {
-      alert('Login failed: ' + (error.response?.data?.detail || 'Unknown error'));
+      const errorMessage = error.response?.data?.detail || 'Login failed. Please try again.';
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -70,7 +71,8 @@ function App() {
       localStorage.setItem('token', response.data.access_token);
       setCurrentView('dashboard');
     } catch (error) {
-      alert('Registration failed: ' + (error.response?.data?.detail || 'Unknown error'));
+      const errorMessage = error.response?.data?.detail || 'Registration failed. Please try again.';
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -88,16 +90,17 @@ function App() {
     formData.append('file', resumeFile);
     
     try {
-      await axios.post(`${API_BASE_URL}/api/upload-resume`, formData, {
+      const response = await axios.post(`${API_BASE_URL}/api/upload-resume`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
         }
       });
-      alert('Resume uploaded successfully!');
+      alert('Resume uploaded successfully! You can now start practicing interviews.');
       setResumeFile(null);
     } catch (error) {
-      alert('Resume upload failed: ' + (error.response?.data?.detail || 'Unknown error'));
+      const errorMessage = error.response?.data?.detail || 'Resume upload failed. Please try again.';
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -116,7 +119,8 @@ function App() {
       setCurrentAnswer('');
       setCurrentView('interview');
     } catch (error) {
-      alert('Failed to start interview: ' + (error.response?.data?.detail || 'Unknown error'));
+      const errorMessage = error.response?.data?.detail || 'Failed to start interview. Please make sure you have uploaded a resume first.';
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -147,7 +151,8 @@ function App() {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
       }
     } catch (error) {
-      alert('Failed to submit answer: ' + (error.response?.data?.detail || 'Unknown error'));
+      const errorMessage = error.response?.data?.detail || 'Failed to submit answer. Please try again.';
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }

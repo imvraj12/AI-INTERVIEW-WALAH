@@ -13,6 +13,7 @@ function App() {
   const [responses, setResponses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState(null);
+  const [resumeUploaded, setResumeUploaded] = useState(false);
 
   // Form states
   const [loginData, setLoginData] = useState({ email: '', password: '' });

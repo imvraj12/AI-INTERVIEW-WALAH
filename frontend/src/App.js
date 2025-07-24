@@ -99,6 +99,7 @@ function App() {
       });
       alert('Resume uploaded successfully! You can now start practicing interviews.');
       setResumeFile(null);
+      setResumeUploaded(true);
     } catch (error) {
       const errorMessage = error.response?.data?.detail || 'Resume upload failed. Please try again.';
       alert(errorMessage);

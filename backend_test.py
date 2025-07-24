@@ -94,10 +94,11 @@ class AIInterviewAPITester:
 
     def test_user_registration(self):
         """Test user registration"""
-        timestamp = datetime.now().strftime('%H%M%S')
+        self.test_timestamp = datetime.now().strftime('%H%M%S')
+        self.test_email = f"test{self.test_timestamp}@example.com"
         test_user_data = {
-            "name": f"Test User {timestamp}",
-            "email": f"test{timestamp}@example.com",
+            "name": f"Test User {self.test_timestamp}",
+            "email": self.test_email,
             "password": "TestPassword123!"
         }
         

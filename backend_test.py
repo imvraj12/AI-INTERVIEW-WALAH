@@ -369,12 +369,11 @@ startxref
         )
         
         # Test duplicate registration
-        if self.token:
+        if self.token and hasattr(self, 'test_email'):
             # Use the same email that was registered earlier
-            timestamp = datetime.now().strftime('%H%M%S')
             duplicate_data = {
                 "name": "Duplicate User",
-                "email": f"test{timestamp}@example.com",  # This should already exist
+                "email": self.test_email,  # This should already exist
                 "password": "TestPassword123!"
             }
             success2, _ = self.run_test(

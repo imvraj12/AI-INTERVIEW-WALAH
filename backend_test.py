@@ -20,6 +20,8 @@ class AIInterviewAPITester:
         self.tests_passed = 0
         self.interview_id = None
         self.question_ids = []
+        self.test_timestamp = None
+        self.test_email = None
 
     def log_test(self, name, success, details=""):
         """Log test results"""
